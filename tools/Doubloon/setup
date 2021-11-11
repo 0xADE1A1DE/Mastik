@@ -1,0 +1,79 @@
+#!/bin/bash
+
+# Text coloring
+RED='\033[0;31m'
+NC='\033[0m'
+
+# General python modules required
+declare -a pyModules=("numpy" "paramiko" "matplotlib" "tqdm")
+
+# Check python 3 is available
+echo "Checking for Python 3..."
+pyVersion="$(python3 -V)"
+if [[ $? == 0 ]]
+then
+    echo "Python 3 found"
+else 
+    printf ${RED}
+    echo "ERROR: Python 3 unavailable"
+    echo "Please install Python 3 and ensure it is available through 'python3'"
+    printf ${NC}
+    
+    exit 1
+fi
+
+# wxPython is a special case, check seperately with addition information
+echo "Checking for 'wx' python module (wxPython)..."
+$(python3 -c "import wx") 
+if [[ $? == 0 ]]
+then
+    echo "'wx' module available"
+else 
+    printf ${RED}
+    echo "ERROR: 'wx' module unavailable"
+    echo "Try 'pip3 install -U wxPython'"
+    echo "Otherwise see here: https://wiki.wxpython.org/How%20to%20install%20wxPython"
+    printf ${NC}
+
+    exit 1
+fi
+
+# Check general python modules are installed
+missing=0
+missingModules=()
+for module in "${pyModules[@]}"
+do
+    echo "Checking for '$module' python module..."
+
+    python3 -c "import $module" > /dev/null 2>&1
+
+    if [[ $? == 0 ]]
+    then
+        echo "'$module' module available"
+    else 
+        printf ${RED}
+        echo "ERROR: '$module' module unavailable"
+        printf $NC
+        missing=1
+        missingModules+=($module)
+    fi
+done
+
+if [[ $missing == 1 ]]
+then
+    printf ${RED}
+    echo "Missing dependencies. Please install the following modules"
+
+    installText="pip3 install -U"
+    for module in "${missingModules[@]}"
+    do
+        printf "\t$module\n"
+        installText="$installText $module" 
+    done
+    echo "Try: '$installText'"
+    printf $NC
+
+    exit 1
+else
+    echo "All dependencies installed"
+fi

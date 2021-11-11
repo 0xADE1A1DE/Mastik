@@ -1,0 +1,27 @@
+FILES= \
+       FR-trace.c
+
+TARGETS=$(FILES:.c=)
+OBJS=${FILES:.c=.o}
+CFLAGS=@CFLAGS@ -I..
+LDFLAGS=-L../src/ -g
+LDLIBS=-lmastik @LIBS@
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+all: ${TARGETS}
+
+install: ${TARGETS}
+	install -d @bindir@
+	install ${TARGETS} @bindir@
+
+${TARGETS}: %: %.o 
+	${CC} ${LDFLAGS} -o $@ $@.o ${LDLIBS}
+
+
+clean:
+	rm -f ${TARGETS} ${OBJS} *.sig out
+
+distclean: clean
+	rm Makefile

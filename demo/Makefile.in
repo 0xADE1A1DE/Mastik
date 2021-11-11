@@ -1,0 +1,48 @@
+FILES= \
+	CB-hist.c \
+	FF-gnupg-1.4.13.c \
+	FF-trace.c \
+	FR-1-file-access.c \
+	FR-2-file-access.c \
+	FR-flush.c \
+	FR-function-call-nodelay.c \
+	FR-function-call.c \
+	FR-gnupg-1.4.13.c \
+	FR-threshold.c \
+	L1-capture.c \
+	L1-rattle.c \
+	L3-capture.c \
+	L3-capturecount.c \
+	L3-scan.c \
+	L2-capture.c \
+	L2-rattle.c \
+	L2-sequence.c 
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+FTARGETS=$(FILES:.c=) 
+FOBJS=${FILES:.c=.o}
+#CFLAGS=-g -std=gnu99 -I..
+CFLAGS=@CFLAGS@ -I..
+LDFLAGS=-L../src/ -g
+LDLIBS=-lmastik @LIBS@
+
+TARGETS=${FTARGETS} ST-L1PP-AES
+OBJS=${FOBJS} ST-L1PP-AES.o aes_core.o
+
+all: ${TARGETS}
+
+install:
+
+${FTARGETS}: %: %.o 
+	${CC} ${LDFLAGS} -o $@ $@.o ${LDLIBS}
+
+ST-L1PP-AES: ST-L1PP-AES.o aes_core.o
+	${CC} ${LDFLAGS} -o $@ ST-L1PP-AES.o aes_core.o ${LDLIBS}
+
+clean:
+	rm -f ${TARGETS} ${OBJS} *.sig out
+
+distclean: clean
+	rm Makefile config.h

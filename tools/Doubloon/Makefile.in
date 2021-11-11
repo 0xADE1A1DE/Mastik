@@ -1,0 +1,44 @@
+SRCS=${wildcard src/*.py}
+ICONS=${wildcard data/icons/*.png}
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+datarootdir=@datarootdir@
+datadir=@datadir@
+
+mastiktoolsdir=${datadir}/mastik/tools
+doubloonsrcdir=${mastiktoolsdir}/doubloon
+
+edit = sed \
+       -e 's|@DOUBLOON_TEXTBOX_HEIGHT[@]|@DOUBLOON_TEXTBOX_HEIGHT@|g' \
+       -e 's|@DOUBLOON_HAVE_DWARF[@]|@DOUBLOON_HAVE_DWARF@|g' \
+       -e 's|@DOUBLOON_EXPERIMENTAL[@]|@DOUBLOON_EXPERIMENTAL@|g' \
+       -e 's|@DOUBLOON_INSTALL_DATADIR[@]|${doubloonsrcdir}/data|g'
+
+
+all: doubloon src/config.py
+
+
+install: all
+	install -d ${doubloonsrcdir}
+	install ${SRCS} ${doubloonsrcdir}
+	install src/config.py ${doubloonsrcdir}
+	cp -r data ${doubloonsrcdir}
+	install -d @bindir@
+	install doubloon @bindir@
+
+doubloon:
+	echo "#!/bin/bash" > doubloon
+	echo "@PYTHON@ ${doubloonsrcdir}" >> doubloon
+	chmod +x doubloon
+
+src/config.py: src/config.py.in
+	rm -f src/config.py
+	${edit} src/config.py.in > src/config.py
+
+clean: 
+	rm -f doubloon src/config.py
+
+
+distclean: clean
+	rm Makefile

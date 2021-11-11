@@ -1,0 +1,32 @@
+HEADERS= \
+	cb.h \
+	ff.h \
+	fr.h \
+	l1.h \
+	l1i.h \
+	l3.h \
+	low.h \
+	pda.h \
+	symbol.h \
+	synctrace.h \
+	transient.h \
+	util.h \
+	l2.h \
+	mm.h \
+	info.h
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+all: ${HEADERS}
+
+
+install: ${HEADERS}
+	install -d @includedir@/mastik
+	install ${HEADERS} @includedir@/mastik
+
+
+clean:
+
+distclean: clean
+	rm Makefile

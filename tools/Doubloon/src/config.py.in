@@ -1,0 +1,72 @@
+"""
+Copyright 2018 Dallas McNeil
+
+This file is part of Mastik.
+Mastik is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Mastik is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Mastik.  If not, see <http://www.gnu.org/licenses/>.
+
+
+Author: Dallas McNeil a1724759@student.adelaide.edu.au
+"""
+
+
+import wx
+import os
+
+
+# Application configuration
+# These values can be changed
+
+# General application properties
+applicationName = "Doubloon"
+applicationExtension = "dbl"
+defaultWindowSize = (1080, 720)
+propertiesAlignment = "right" # left or right
+propertiesWidth = 220
+textboxHeight = @DOUBLOON_TEXTBOX_HEIGHT@
+dwarfSupport = @DOUBLOON_HAVE_DWARF@
+printMetrics = False
+experimental = @DOUBLOON_EXPERIMENTAL@
+
+# Graph drawing colours
+graphColours = [wx.Colour(255, 0, 0), wx.Colour(0, 0, 255), wx.Colour(0, 255, 0), wx.Colour(255, 255, 0), wx.Colour(0, 255, 255), wx.Colour(255, 0, 255), wx.Colour(255, 128, 0), wx.Colour(128, 0, 255), wx.Colour(0, 255, 128)]
+graphBackground = wx.Colour(0, 0, 0)
+graphForeground = wx.Colour(255, 255, 255)
+graphGrid = wx.Colour(60, 60, 60)
+graphBorder = wx.Colour(120, 120, 120)
+assemblyColorA = wx.Colour(0,196,255)
+assemblyColorAB = wx.Colour(64,220,128)
+assemblyColorB = wx.Colour(128,255,0)
+
+# Depending on your computer, this value can be adjusted to increase or decrease the number of results drawn
+graphMaxResolution = 500
+
+# Graph properties
+graphZoomFactor = 1.5
+graphShiftFactor = 0.25
+graphMinXSize = 50
+graphMinYSize = 10
+graphDefaultYLimits = [0, 300]
+
+RES_ICON_PLAY = "icons/play-26.png"
+RES_ICON_STOP = "icons/stop-26.png"
+RES_ICON_CONFIG = "icons/config-26.png"
+RES_ICON_OPEN = "icons/open-26.png"
+RES_ICON_SAVE = "icons/save-26.png"
+RES_ICON_EXPORT = "icons/export-26.png"
+RES_ICON_IMPORT = "icons/import-26.png"
+RES_ICON_X86 = "icons/x86-26.png"
+
+__RES_BASE_PATH = "@DOUBLOON_INSTALL_DATADIR@"
+def getResource(resource):
+    return os.path.join(__RES_BASE_PATH, resource)

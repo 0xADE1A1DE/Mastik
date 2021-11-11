@@ -1,0 +1,18 @@
+SUBDIRS=@TOOLS@
+
+all:
+	for f in ${SUBDIRS}; do   ${MAKE} -C $$f || break ;  done
+
+install: all
+	for f in ${SUBDIRS}; do   ${MAKE} -C $$f install || break ;  done
+
+clean: cleansubdirs localclean
+
+cleansubdirs:
+	for f in ${SUBDIRS}; do   ${MAKE} -C $$f clean;  done
+
+localclean:
+
+distclean: localclean
+	for f in ${SUBDIRS}; do   ${MAKE} -C $$f distclean;  done
+	rm Makefile

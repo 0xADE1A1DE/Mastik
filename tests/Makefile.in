@@ -1,0 +1,41 @@
+FILES= \
+       l1irattle.c  \
+       l1rattle.c \
+       testfr.c \
+       testl1.c \
+       testl1i.c \
+       testl3.c \
+       testl1aes.c \
+       testl2aes.c
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+FTARGETS=$(FILES:.c=)
+FOBJS=${FILES:.c=.o}
+CFLAGS=@CFLAGS@ -I..
+LDFLAGS=-L../src/ -g
+LDLIBS=-lmastik @LIBS@
+
+TARGETS=${FTARGETS} testl1aes
+OBJS=${FOBJS} testl1aes.o aes_core.o
+
+all: ${TARGETS}
+
+${TARGETS}: %: %.o 
+	${CC} ${LDFLAGS} -o $@ $@.o ${LDLIBS}
+
+testl1aes: testl1aes.o aes_core.o
+	${CC} ${LDFLAGS} -o $@ testl1aes.o aes_core.o ${LDLIBS}
+       
+testl2aes: testl2aes.o aes_core.o
+	${CC} ${LDFLAGS} -o $@ $^ ${LDLIBS}
+
+install:
+
+
+clean:
+	rm -f ${TARGETS} ${OBJS} *.sig out
+
+distclean: clean
+	rm Makefile
