@@ -574,7 +574,7 @@ static int probemap(mm_t mm) {
   return 1;
 }
 
-void mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, int count, vlist_t list) {
+void _mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, int count, vlist_t list) {
   switch (cachelevel) {
     case L1:
       return mm_l1l2findlines(mm, cachelevel, line, count, list);
@@ -591,17 +591,34 @@ void mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, int count, vlis
 
 void* mm_requestline(mm_t mm, cachelevel_e cachelevel, int line) {
   vlist_t vl = vl_new();
-  mm_requestlines(mm, cachelevel, line, 1, vl);
+  _mm_requestlines(mm, cachelevel, line, 1, vl);
   void* mem = vl_get(vl, 0);
   vl_free(vl);
   return mem;
 }
 
+void mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, void** lines, int count) {
+  vlist_t vl = vl_new();
+  _mm_requestlines(mm, cachelevel, line, count, vl);
+  for (int i = 0; i < count; i++) {
+    lines[i] = vl_get(vl, i);
+  }
+  vl_free(vl);
+  return;
+}
+
 void mm_returnline(mm_t mm, void* line) {
   UNSET_ALLOCATED_FLAG(line);
 }
-void mm_returnlines(mm_t mm, vlist_t lines) {
+
+void _mm_returnlines(mm_t mm, vlist_t lines) {
   int len = vl_len(lines);
   for (int i = 0; i < len; i++)
     mm_returnline(mm, vl_get(lines, i));
+}
+
+void mm_returnlines(mm_t mm, void** lines, int count) {
+  for (int i = 0; i < count; i++) {
+    mm_returnline(mm, lines[i]);
+  }
 }

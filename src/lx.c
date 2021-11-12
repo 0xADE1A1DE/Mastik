@@ -292,7 +292,7 @@ int lx_monitor(lxpp_t lx, int line) {
   int associativity = lx->lxinfo.associativity;
     
   vlist_t vl = vl_new();
-  mm_requestlines(lx->mm, lx->level, line, associativity, vl);
+  _mm_requestlines(lx->mm, lx->level, line, associativity, vl);
   
   int len = vl_len(vl);
   for (int way = 0; way < len; way++) {

@@ -30,19 +30,7 @@
 #include <strings.h>
 #include <sys/mman.h>
 #include <mastik/l2.h>
-
-#ifdef MAP_HUGETLB
-#define HUGEPAGES MAP_HUGETLB
-#endif
-#ifdef VM_FLAGS_SUPERPAGE_SIZE_2MB
-#define HUGEPAGES VM_FLAGS_SUPERPAGE_SIZE_2MB
-#endif
-
-#ifdef HUGEPAGES
-#define HUGEPAGEBITS 21
-#define HUGEPAGESIZE (1<<HUGEPAGEBITS)
-#define HUGEPAGEMASK (HUGEPAGESIZE - 1)
-#endif
+#include <mastik/mm.h>
 
 int main(int ac, char **av) {
   const uint64_t nsets = 1024;

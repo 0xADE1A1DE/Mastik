@@ -22,8 +22,8 @@
 
 #include <stdint.h>
 
-#include "mastik/low.h"
-#include "../src/vlist.h"
+#include <src/vlist.h>
+#include <mastik/low.h>
 #include <mastik/mm.h>
 #include <mastik/info.h>
 

@@ -41,19 +41,7 @@
 #include "tsx.h"
 #include <mastik/lx.h>
 #include <mastik/impl.h>
-
-#ifdef MAP_HUGETLB
-#define HUGEPAGES MAP_HUGETLB
-#endif
-#ifdef VM_FLAGS_SUPERPAGE_SIZE_2MB
-#define HUGEPAGES VM_FLAGS_SUPERPAGE_SIZE_2MB
-#endif
-
-#ifdef HUGEPAGES
-#define HUGEPAGEBITS 21
-#define HUGEPAGESIZE (1<<HUGEPAGEBITS)
-#define HUGEPAGEMASK (HUGEPAGESIZE - 1)
-#endif
+#include <mastik/mm.h>
 
 struct l2pp {
   void **monitoredhead;

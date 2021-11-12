@@ -23,7 +23,7 @@
 #include <stdint.h>
 #include <unistd.h>
 
-#include "lx.h"
+#include <mastik/lx.h>
 
 #define LNEXT(t) (*(void **)(t))
 #define OFFSET(p, o) ((void *)((uintptr_t)(p) + (o)))

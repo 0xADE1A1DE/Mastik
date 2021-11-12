@@ -56,7 +56,11 @@ mm_t mm_prepare(lxinfo_t l1info, lxinfo_t l2info, lxinfo_t l3info);
 
 void* mm_requestline(mm_t mm, cachelevel_e cachelevel, int line);
 
+void mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, void** lines, int count);
+
 void mm_returnline(mm_t mm, void* line);
+
+void mm_returnlines(mm_t mm, void** lines, int count);
 
 void mm_release(mm_t mm);
 
