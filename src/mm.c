@@ -44,39 +44,17 @@
 #include "timestats.h"
 #include "tsx.h"
 
-#define L3_SETS_PER_SLICE 2048
-#define L3_GROUPSIZE_FOR_HUGEPAGES 1024
-
-// The number of cache sets in each page
-#define L3_SETS_PER_PAGE 64
-
-#define L3_CACHELINE 64
-
-#ifdef MAP_HUGETLB
-#define HUGEPAGES MAP_HUGETLB
-#endif
-#ifdef VM_FLAGS_SUPERPAGE_SIZE_2MB
-#define HUGEPAGES VM_FLAGS_SUPERPAGE_SIZE_2MB
-#endif
-
-#ifdef HUGEPAGES
-#define HUGEPAGEBITS 21
-#define HUGEPAGESIZE (1<<HUGEPAGEBITS)
-#define HUGEPAGEMASK (HUGEPAGESIZE - 1)
-#endif
-
 static int ptemap(mm_t mm);
 static int probemap(mm_t mm);
 static int checkevict(vlist_t es, void *candidate);
 static uintptr_t getphysaddr(void *p);
 
 static void* allocate_buffer(mm_t mm) {
-  // Allocate cache  buffer
+  // Allocate cache buffer
   int bufsize;
   char *buffer = MAP_FAILED;
   bufsize = mm->l3info.bufsize;
 #ifdef HUGEPAGES
-  // add an if here to check if we want to use huge pages.
     mm->pagesize = HUGEPAGESIZE;
     mm->pagetype = PAGETYPE_HUGE;
     mm->l3groupsize = L3_GROUPSIZE_FOR_HUGEPAGES;	
@@ -93,11 +71,7 @@ static void* allocate_buffer(mm_t mm) {
     perror("Error allocating buffer!\n");
     exit(-1);
   }
-  uint64_t physAddr = getphysaddr(buffer);
-  // printf("Physical set of allocated buffer %lu\n", physAddr);
-  // printf("L1 allignment: %lu\n", (physAddr % (mm->l1info.sets * LX_CACHELINE)));
-  // printf("L2 allignment: %lu\n", (physAddr % (mm->l2info.sets * LX_CACHELINE)));
-  // printf("L3 slice allignment: %lu\n", (physAddr % (mm->l3info.sets * LX_CACHELINE)));
+
   bzero(buffer, bufsize);
   return buffer;
 }
@@ -271,7 +245,7 @@ static int ptemap(mm_t mm) {
     return 0;
   if (mm->l3info.slices & (mm->l3info.slices - 1)) // Cannot do non-linear for now
     return 0;
-  // mm->l3info.sets = sets per slice
+  // mm->l3info.sets is equal to sets per slice
   mm->l3ngroups = mm->l3info.sets * mm->l3info.slices / mm->l3groupsize;
   mm->l3groups = (vlist_t *)calloc(mm->l3ngroups, sizeof(vlist_t));
   

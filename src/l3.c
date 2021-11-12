@@ -59,27 +59,6 @@
  * default for the more common size.  If we learn how to probe
  * the slice size we can get rid of this mess.
  */
-#define L3_SETS_PER_SLICE 2048
-#define L3_GROUPSIZE_FOR_HUGEPAGES 1024
-
-// The number of cache sets in each page
-#define L3_SETS_PER_PAGE 64
-
-#define L3_CACHELINE 64
-
-#ifdef MAP_HUGETLB
-#define HUGEPAGES MAP_HUGETLB
-#endif
-#ifdef VM_FLAGS_SUPERPAGE_SIZE_2MB
-#define HUGEPAGES VM_FLAGS_SUPERPAGE_SIZE_2MB
-#endif
-
-#ifdef HUGEPAGES
-#define HUGEPAGEBITS 21
-#define HUGEPAGESIZE (1<<HUGEPAGEBITS)
-#define HUGEPAGEMASK (HUGEPAGESIZE - 1)
-#endif
-
 
 struct l3pp {
   void **monitoredhead;
@@ -178,9 +157,8 @@ l3pp_t l3_prepare(l3info_t l3info, mm_t mm) {
   // Check if linearmap and quadratic map are called together
   if ((l3->l3info.flags & (L3FLAG_LINEARMAP | L3FLAG_QUADRATICMAP)) == (L3FLAG_LINEARMAP | L3FLAG_QUADRATICMAP)) {
     free(l3);
+    fprintf(stderr, "Error: Cannot call linear and quadratic map together\n");
     return NULL;
-    //fprintf(stderr, "Error: Cannot call linear and quadratic map together\n");
-    //exit(1);
   }
   
   l3->mm = mm;

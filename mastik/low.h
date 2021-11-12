@@ -20,6 +20,7 @@
 #ifndef __LOW_H__
 #define __LOW_H__
 
+#include <stdint.h>
 
 #define L2_THRESHOLD 110
 #define L3_THRESHOLD 140

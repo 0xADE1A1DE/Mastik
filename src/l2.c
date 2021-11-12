@@ -92,11 +92,6 @@ void fillL2Info(l2info_t l2info) {
   loadL2cpuidInfo(l2info);
   if (l2info->associativity == 0)
     l2info->associativity = l2info->cpuidInfo.cacheInfo.associativity + 1;
-  // if (l2->l2info.slices == 0) {
-  //   if (l2->l2info.setsperslice == 0)
-  //     l2->l2info.setsperslice = l2_SETS_PER_SLICE;
-  //   l2->l2info.slices = (l2->cpuidInfo.cacheInfo.sets + 1)/ l2->l2info.setsperslice;
-  // }
   if (l2info->sets == 0)
     l2info->sets = l2info->cpuidInfo.cacheInfo.sets + 1;
   if (l2info->bufsize == 0) {
@@ -112,14 +107,6 @@ l2pp_t l2_prepare(l2info_t l2info, mm_t mm) {
     bcopy(l2info, &l2->l2info, sizeof(struct l2info));
   fillL2Info(&l2->l2info);
   l2->level = L2;
-  
-  // Check if linearmap and quadratic map are called together
-  if ((l2->l2info.flags & (LXFLAG_LINEARMAP | LXFLAG_QUADRATICMAP)) == (LXFLAG_LINEARMAP | LXFLAG_QUADRATICMAP)) {
-    free(l2);
-    return NULL;
-    //fprintf(stderr, "Error: Cannot call linear and quadratic map together\n");
-    //exit(1);
-  }
   
   l2->mm = mm;
   if (l2->mm == NULL) {
