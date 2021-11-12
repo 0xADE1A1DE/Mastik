@@ -80,14 +80,10 @@ void analyse(int64_t data[256][L2_SETS], uint8_t *key, int *offset) {
   }
 }
 
-
 void crypto(uint8_t *input, uint8_t *output, void *data) {
   AES_KEY *aeskey = (AES_KEY *)data;
   AES_encrypt(input, output, aeskey);
 }
-
-
-
 
 int main(int ac, char **av) {
   int samples = NSAMPLES;
@@ -144,7 +140,7 @@ int main(int ac, char **av) {
 
 
   aes_t key;
-  aes_t keyGuess;
+  uint8_t keyGuess;
   aes_t keySolution;
   char * keystr = "2b7e151628aed2a6abf7158809cf4f3c";
   tobinary(keystr, key);
@@ -168,14 +164,14 @@ int main(int ac, char **av) {
       int key, offset;
       printf("Key byte %2d", i);
       if (analysis) {
-	analyse(clusters[i].avg, &keyGuess[i], &offset);
-	printf(" Guess:%1x-\n", keyGuess[i]);
+	analyse(clusters[i].avg, &keyGuess, &offset);
+	printf(" Guess:%1x-\n", keyGuess);
       } else {
 	offset = -L2_SETS;
 	printf("\n");
       }
       if (heatmap) {
-	display(clusters[i].count, clusters[i].avg, key, offset);
+	display(clusters[i].count, clusters[i].avg, keyGuess, offset);
 	printf("\n");
       }
     }
@@ -205,14 +201,4 @@ int main(int ac, char **av) {
     display(clusters[byte].count, clusters[byte].avg, 0, -L2_SETS);
     free(clusters);
   }
-
-  for (int i=0; i<16; i++)
-  {
-    if (keyGuess[i] != keySolution[i] >> 4)
-    {
-      return 1;
-    }
-  }
-  return 0;
-
 }

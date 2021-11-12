@@ -16,7 +16,9 @@ FILES= \
 	L3-scan.c \
 	L2-capture.c \
 	L2-rattle.c \
-	L2-sequence.c 
+	L2-sequence.c \
+	ST-L2PP-AES.c
+	
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
@@ -28,7 +30,7 @@ CFLAGS=@CFLAGS@ -I..
 LDFLAGS=-L../src/ -g
 LDLIBS=-lmastik @LIBS@
 
-TARGETS=${FTARGETS} ST-L1PP-AES
+TARGETS=${FTARGETS} ST-L1PP-AES ST-L2PP-AES
 OBJS=${FOBJS} ST-L1PP-AES.o aes_core.o
 
 all: ${TARGETS}
@@ -40,6 +42,9 @@ ${FTARGETS}: %: %.o
 
 ST-L1PP-AES: ST-L1PP-AES.o aes_core.o
 	${CC} ${LDFLAGS} -o $@ ST-L1PP-AES.o aes_core.o ${LDLIBS}
+	
+ST-L2PP-AES: ST-L2PP-AES.o aes_core.o
+	${CC} ${LDFLAGS} -o $@ ST-L2PP-AES.o aes_core.o ${LDLIBS}
 
 clean:
 	rm -f ${TARGETS} ${OBJS} *.sig out
