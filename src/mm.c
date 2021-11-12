@@ -55,11 +55,12 @@ static void* allocate_buffer(mm_t mm) {
   char *buffer = MAP_FAILED;
   bufsize = mm->l3info.bufsize;
 #ifdef HUGEPAGES
+  if (mm->l3info.flags & L3FLAG_NOHUGEPAGES) == 0) {
     mm->pagesize = HUGEPAGESIZE;
     mm->pagetype = PAGETYPE_HUGE;
     mm->l3groupsize = L3_GROUPSIZE_FOR_HUGEPAGES;	
     buffer = mmap(NULL, bufsize, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE|HUGEPAGES, -1, 0);
-
+  }
 #endif
   if (buffer == MAP_FAILED) {
     mm->pagetype = PAGETYPE_SMALL;
