@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 CSIRO
+ * Copyright 2021 The University of Adelaide
  *
  * This file is part of Mastik.
  *
@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Mastik.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 
 #include "config.h"
 #include <stdio.h>
