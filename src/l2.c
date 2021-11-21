@@ -34,15 +34,16 @@
 #include <mastik/l2.h>
 #include <mastik/low.h>
 #include <mastik/mm.h>
-
-#include "vlist.h"
-#include "mm-impl.h"
-
-#include "timestats.h"
-#include "tsx.h"
 #include <mastik/lx.h>
 #include <mastik/impl.h>
 #include <mastik/mm.h>
+
+#include "vlist.h"
+#include "mm-impl.h"
+#include "timestats.h"
+#include "tsx.h"
+
+
 
 struct l2pp {
   void **monitoredhead;

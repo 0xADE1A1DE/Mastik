@@ -33,8 +33,8 @@
 #include <mastik/mm.h>
 #include <mastik/l3.h>
 #include <mastik/low.h>
-#include "mastik/impl.h"
-#include "mastik/lx.h"
+#include <mastik/impl.h>
+#include <mastik/lx.h>
 
 #include "vlist.h"
 #include "mm-impl.h"
