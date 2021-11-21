@@ -5,16 +5,16 @@ LIBSRCS= \
 	fr.c \
 	l1.c \
 	l1i.c \
+	l2.c \
 	l3.c \
+	lx.c \
+	mm.c \
 	pda.c \
 	util.c \
 	symbol.c \
 	synctrace.c \
 	timestats.c \
 	vlist.c \
-	l2.c \
-	lx.c \
-	mm.c \
 	@SYMBOL_SRCS@
 
 prefix=@prefix@

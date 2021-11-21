@@ -17,15 +17,17 @@
  * along with Mastik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _LX_H
-#define _LX_H
+#ifndef __LX_H__
+#define __LX_H__
 
 #include <stdint.h>
 
-#include <src/vlist.h>
 #include <mastik/low.h>
 #include <mastik/mm.h>
 #include <mastik/info.h>
+
+struct vlist;
+typedef struct vlist *vlist_t;
 
 struct lxpp {
   void **monitoredhead;
