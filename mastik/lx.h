@@ -18,7 +18,7 @@
  */
 
 #ifndef __LX_H__
-#define __LX_H__
+#define __LX_H__ 1
 
 #include <stdint.h>
 
@@ -53,4 +53,4 @@ struct lxpp {
 typedef struct lxpp *lxpp_t;
 
 
-#endif
+#endif // __LX_H__

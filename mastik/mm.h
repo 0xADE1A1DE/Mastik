@@ -17,8 +17,9 @@
  * along with Mastik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MM_H
-#define MM_H
+#ifndef __MM_H__
+#define __MM_H__ 1
+
 #include <mastik/low.h>
 #include <mastik/info.h>
 
@@ -67,4 +68,4 @@ void mm_release(mm_t mm);
 int mm_initialisel3(mm_t mm);
 
 
-#endif
+#endif // __MM_H__

@@ -18,7 +18,7 @@
  */
 
 #ifndef __L2_H__
-#define __L2_H__
+#define __L2_H__ 1
 
 #include <stdint.h>
 #include <mastik/impl.h>
@@ -68,4 +68,4 @@ void l2_randomise(l2pp_t l2);
 int loadL2cpuidInfo(l2info_t l2info);
 void fillL2Info(l2info_t l2info);
 
-#endif
+#endif // __L2_H__

@@ -17,8 +17,8 @@
  * along with Mastik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _IMPL_H
-#define _IMPL_H
+#ifndef _IMPL_H__
+#define _IMPL_H__ 1
 
 #include <stdint.h>
 #include <unistd.h>
@@ -75,4 +75,4 @@ void lx_dummy_cb(lxpp_t l1, int recnum, void *data);
 
 void lx_release(lxpp_t lx);
 
-#endif
+#endif // __IMPL_H__

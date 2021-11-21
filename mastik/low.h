@@ -18,7 +18,7 @@
  */
 
 #ifndef __LOW_H__
-#define __LOW_H__
+#define __LOW_H__ 1
 
 #include <stdint.h>
 

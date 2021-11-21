@@ -17,8 +17,8 @@
  * along with Mastik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INFO_H
-#define INFO_H
+#ifndef INFO_H__
+#define INFO_H__ 1
 
 #include <mastik/low.h>
 
@@ -37,4 +37,4 @@ struct lxinfo {
 };
 typedef struct lxinfo *lxinfo_t;
 
-#endif
+#endif // __INFO_H__
