@@ -28,23 +28,11 @@
 #include <sys/mman.h>
 #define L2_SETS 1024
 
+#include <mastik/mm.h>
 #include <mastik/lx.h>
 #include <mastik/l1.h>
 #include <mastik/l2.h>
 #include <mastik/l3.h>
-
-#ifdef MAP_HUGETLB
-#define HUGEPAGES MAP_HUGETLB
-#endif
-#ifdef VM_FLAGS_SUPERPAGE_SIZE_2MB
-#define HUGEPAGES VM_FLAGS_SUPERPAGE_SIZE_2MB
-#endif
-
-#ifdef HUGEPAGES
-#define HUGEPAGEBITS 21
-#define HUGEPAGESIZE (1 << HUGEPAGEBITS)
-#define HUGEPAGEMASK (HUGEPAGESIZE - 1)
-#endif
 
 #define TEST_RANGE 200
 

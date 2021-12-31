@@ -18,10 +18,10 @@
  */
 
 #ifndef __LOW_H__
-#define __LOW_H__
+#define __LOW_H__ 1
 
+#include <stdint.h>
 
-#define L2_THRESHOLD 110
 #define L3_THRESHOLD 140
 
 #ifdef PAGE_SIZE

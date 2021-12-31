@@ -36,9 +36,8 @@ struct mm {
   pagetype_e pagetype;
 };
 
-void mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, int count, vlist_t list);
-void mm_returnlines(mm_t mm, vlist_t line);
+void _mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, int count, vlist_t list);
+void _mm_returnlines(mm_t mm, vlist_t line);
 int timeevict(vlist_t es, void *candidate);
-
 
 #endif

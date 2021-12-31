@@ -44,44 +44,23 @@
 #include "timestats.h"
 #include "tsx.h"
 
-#define L3_SETS_PER_SLICE 2048
-#define L3_GROUPSIZE_FOR_HUGEPAGES 1024
-
-// The number of cache sets in each page
-#define L3_SETS_PER_PAGE 64
-
-#define L3_CACHELINE 64
-
-#ifdef MAP_HUGETLB
-#define HUGEPAGES MAP_HUGETLB
-#endif
-#ifdef VM_FLAGS_SUPERPAGE_SIZE_2MB
-#define HUGEPAGES VM_FLAGS_SUPERPAGE_SIZE_2MB
-#endif
-
-#ifdef HUGEPAGES
-#define HUGEPAGEBITS 21
-#define HUGEPAGESIZE (1<<HUGEPAGEBITS)
-#define HUGEPAGEMASK (HUGEPAGESIZE - 1)
-#endif
-
 static int ptemap(mm_t mm);
 static int probemap(mm_t mm);
 static int checkevict(vlist_t es, void *candidate);
 static uintptr_t getphysaddr(void *p);
 
 static void* allocate_buffer(mm_t mm) {
-  // Allocate cache  buffer
+  // Allocate cache buffer
   int bufsize;
   char *buffer = MAP_FAILED;
   bufsize = mm->l3info.bufsize;
 #ifdef HUGEPAGES
-  // add an if here to check if we want to use huge pages.
+  if ((mm->l3info.flags & L3FLAG_NOHUGEPAGES) == 0) {
     mm->pagesize = HUGEPAGESIZE;
     mm->pagetype = PAGETYPE_HUGE;
     mm->l3groupsize = L3_GROUPSIZE_FOR_HUGEPAGES;	
     buffer = mmap(NULL, bufsize, PROT_READ|PROT_WRITE, MAP_ANON|MAP_PRIVATE|HUGEPAGES, -1, 0);
-
+  }
 #endif
   if (buffer == MAP_FAILED) {
     mm->pagetype = PAGETYPE_SMALL;
@@ -93,11 +72,7 @@ static void* allocate_buffer(mm_t mm) {
     perror("Error allocating buffer!\n");
     exit(-1);
   }
-  uint64_t physAddr = getphysaddr(buffer);
-  // printf("Physical set of allocated buffer %lu\n", physAddr);
-  // printf("L1 allignment: %lu\n", (physAddr % (mm->l1info.sets * LX_CACHELINE)));
-  // printf("L2 allignment: %lu\n", (physAddr % (mm->l2info.sets * LX_CACHELINE)));
-  // printf("L3 slice allignment: %lu\n", (physAddr % (mm->l3info.sets * LX_CACHELINE)));
+
   bzero(buffer, bufsize);
   return buffer;
 }
@@ -271,7 +246,7 @@ static int ptemap(mm_t mm) {
     return 0;
   if (mm->l3info.slices & (mm->l3info.slices - 1)) // Cannot do non-linear for now
     return 0;
-  // mm->l3info.sets = sets per slice
+  // mm->l3info.sets is equal to sets per slice
   mm->l3ngroups = mm->l3info.sets * mm->l3info.slices / mm->l3groupsize;
   mm->l3groups = (vlist_t *)calloc(mm->l3ngroups, sizeof(vlist_t));
   
@@ -599,7 +574,7 @@ static int probemap(mm_t mm) {
   return 1;
 }
 
-void mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, int count, vlist_t list) {
+void _mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, int count, vlist_t list) {
   switch (cachelevel) {
     case L1:
       return mm_l1l2findlines(mm, cachelevel, line, count, list);
@@ -616,17 +591,34 @@ void mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, int count, vlis
 
 void* mm_requestline(mm_t mm, cachelevel_e cachelevel, int line) {
   vlist_t vl = vl_new();
-  mm_requestlines(mm, cachelevel, line, 1, vl);
+  _mm_requestlines(mm, cachelevel, line, 1, vl);
   void* mem = vl_get(vl, 0);
   vl_free(vl);
   return mem;
 }
 
+void mm_requestlines(mm_t mm, cachelevel_e cachelevel, int line, void** lines, int count) {
+  vlist_t vl = vl_new();
+  _mm_requestlines(mm, cachelevel, line, count, vl);
+  for (int i = 0; i < count; i++) {
+    lines[i] = vl_get(vl, i);
+  }
+  vl_free(vl);
+  return;
+}
+
 void mm_returnline(mm_t mm, void* line) {
   UNSET_ALLOCATED_FLAG(line);
 }
-void mm_returnlines(mm_t mm, vlist_t lines) {
+
+void _mm_returnlines(mm_t mm, vlist_t lines) {
   int len = vl_len(lines);
   for (int i = 0; i < len; i++)
     mm_returnline(mm, vl_get(lines, i));
+}
+
+void mm_returnlines(mm_t mm, void** lines, int count) {
+  for (int i = 0; i < count; i++) {
+    mm_returnline(mm, lines[i]);
+  }
 }

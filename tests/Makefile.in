@@ -5,8 +5,7 @@ FILES= \
        testl1.c \
        testl1i.c \
        testl3.c \
-       testl1aes.c \
-       testl2aes.c
+       testl1aes.c
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@

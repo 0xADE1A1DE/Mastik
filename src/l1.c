@@ -28,10 +28,10 @@
 #include <mastik/low.h>
 #include <mastik/l1.h>
 #include <mastik/mm.h>
-#include "mm-impl.h"
-
-#include "vlist.h"
 #include <mastik/impl.h>
+
+#include "mm-impl.h"
+#include "vlist.h"
 
 struct l1pp {
   void **monitoredhead;

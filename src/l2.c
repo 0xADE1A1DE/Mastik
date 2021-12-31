@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 CSIRO
+ * Copyright 2021 The University of Adelaide
  *
  * This file is part of Mastik.
  *
@@ -17,6 +17,7 @@
  * along with Mastik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #include "config.h"
 #include <stdio.h>
 #include <assert.h>
@@ -33,27 +34,16 @@
 #include <mastik/l2.h>
 #include <mastik/low.h>
 #include <mastik/mm.h>
+#include <mastik/lx.h>
+#include <mastik/impl.h>
+#include <mastik/mm.h>
 
 #include "vlist.h"
 #include "mm-impl.h"
-
 #include "timestats.h"
 #include "tsx.h"
-#include <mastik/lx.h>
-#include <mastik/impl.h>
 
-#ifdef MAP_HUGETLB
-#define HUGEPAGES MAP_HUGETLB
-#endif
-#ifdef VM_FLAGS_SUPERPAGE_SIZE_2MB
-#define HUGEPAGES VM_FLAGS_SUPERPAGE_SIZE_2MB
-#endif
 
-#ifdef HUGEPAGES
-#define HUGEPAGEBITS 21
-#define HUGEPAGESIZE (1<<HUGEPAGEBITS)
-#define HUGEPAGEMASK (HUGEPAGESIZE - 1)
-#endif
 
 struct l2pp {
   void **monitoredhead;
@@ -92,11 +82,6 @@ void fillL2Info(l2info_t l2info) {
   loadL2cpuidInfo(l2info);
   if (l2info->associativity == 0)
     l2info->associativity = l2info->cpuidInfo.cacheInfo.associativity + 1;
-  // if (l2->l2info.slices == 0) {
-  //   if (l2->l2info.setsperslice == 0)
-  //     l2->l2info.setsperslice = l2_SETS_PER_SLICE;
-  //   l2->l2info.slices = (l2->cpuidInfo.cacheInfo.sets + 1)/ l2->l2info.setsperslice;
-  // }
   if (l2info->sets == 0)
     l2info->sets = l2info->cpuidInfo.cacheInfo.sets + 1;
   if (l2info->bufsize == 0) {
@@ -112,14 +97,6 @@ l2pp_t l2_prepare(l2info_t l2info, mm_t mm) {
     bcopy(l2info, &l2->l2info, sizeof(struct l2info));
   fillL2Info(&l2->l2info);
   l2->level = L2;
-  
-  // Check if linearmap and quadratic map are called together
-  if ((l2->l2info.flags & (LXFLAG_LINEARMAP | LXFLAG_QUADRATICMAP)) == (LXFLAG_LINEARMAP | LXFLAG_QUADRATICMAP)) {
-    free(l2);
-    return NULL;
-    //fprintf(stderr, "Error: Cannot call linear and quadratic map together\n");
-    //exit(1);
-  }
   
   l2->mm = mm;
   if (l2->mm == NULL) {

@@ -17,13 +17,13 @@
  * along with Mastik.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __L2
-#define __L2
+#ifndef __L2_H__
+#define __L2_H__ 1
 
 #include <stdint.h>
-#include "impl.h"
+#include <mastik/impl.h>
 
-#include "mm.h"
+#include <mastik/mm.h>
 
 typedef struct l2pp *l2pp_t;
 typedef struct l2info *l2info_t;
@@ -68,4 +68,4 @@ void l2_randomise(l2pp_t l2);
 int loadL2cpuidInfo(l2info_t l2info);
 void fillL2Info(l2info_t l2info);
 
-#endif
+#endif // __L2_H__

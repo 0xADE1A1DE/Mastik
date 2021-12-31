@@ -20,8 +20,8 @@
 #ifndef __SYNCTRACE_H__
 #define __SYNCTRACE_H__ 1
 
-#include "l1.h"
-#include "l2.h"
+#include <mastik/l1.h>
+#include <mastik/l2.h>
 
 #include <stdint.h>
 

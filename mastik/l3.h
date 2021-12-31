@@ -20,6 +20,8 @@
 #ifndef __L3_H__
 #define __L3_H__ 1
 
+#include <stdint.h>
+
 #include <mastik/low.h>
 #include <mastik/mm.h>
 
@@ -45,6 +47,13 @@ typedef struct l3info *l3info_t;
 #define L3FLAG_QUADRATICMAP	0x08	// Defaults to this if huge pages is specified
 #define L3FLAG_LINEARMAP	0x10	// Defaults to this if small pages is specified
 
+#define L3_SETS_PER_SLICE 2048
+#define L3_GROUPSIZE_FOR_HUGEPAGES 1024
+
+// The number of cache sets in each page
+#define L3_SETS_PER_PAGE 64
+
+#define L3_CACHELINE 64
 
 l3pp_t l3_prepare(l3info_t l3info, mm_t mm);
 void l3_release(l3pp_t l3);

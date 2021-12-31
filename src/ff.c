@@ -31,7 +31,6 @@
 #include "vlist.h"
 #include "timestats.h"
 
-
 #define DEFAULT_THRESHOLD_CAPACITY 16
 
 #define THRESHOLD_SAMPLES 1000
