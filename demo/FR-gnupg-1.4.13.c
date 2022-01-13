@@ -74,7 +74,7 @@ int main(int ac, char **av) {
   free(res);
   fr_release(fr);
 #else // HAVE_DEBUG_SYMBOLS
-  fprintf(stderr, "%s: No dupport for debug symbols\n", av[0]);
+  fprintf(stderr, "%s: No support for debug symbols\n", av[0]);
   exit(1);
 #endif
 
