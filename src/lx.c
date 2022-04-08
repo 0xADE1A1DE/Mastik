@@ -186,7 +186,8 @@ int lx_getmonitoredset(lxpp_t lx, int *lines, int nlines) {
     return lx->nmonitored;
   if (nlines > lx->nmonitored)
     nlines = lx->nmonitored;
-  bcopy(lx->monitoredset, lines, nlines * sizeof(int));
+  if (lines)
+    bcopy(lx->monitoredset, lines, nlines * sizeof(int));
   return lx->nmonitored;
 }
 
