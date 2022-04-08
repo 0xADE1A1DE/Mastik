@@ -115,9 +115,9 @@ void mm_release(mm_t mm) {
   free(mm);
 }
 
-#define CHECK_ALLOCATED_FLAG(buf, offset) *((uint64_t *)(buf + offset + 3 * sizeof(uint64_t)))
-#define SET_ALLOCATED_FLAG(buf, offset) (*((uint64_t *)(buf + offset + 3 * sizeof(uint64_t))) = 1)
-#define UNSET_ALLOCATED_FLAG(buf) (*((uint64_t *)(buf + 3 * sizeof(uint64_t))) = 0)
+#define CHECK_ALLOCATED_FLAG(buf, offset) (*((uint64_t *)((uintptr_t)buf + offset + 3 * sizeof(uint64_t))))
+#define SET_ALLOCATED_FLAG(buf, offset) (*((uint64_t *)((uintptr_t)buf + offset + 3 * sizeof(uint64_t))) = 1ul)
+#define UNSET_ALLOCATED_FLAG(buf) (*((uint64_t *)((uintptr_t)buf + 3 * sizeof(uint64_t))) = 0ul)
 
 #define L2_STRIDE ((mm->l2info.sets * L2_CACHELINE))
 
@@ -153,14 +153,14 @@ static void mm_l3findlines(mm_t mm, int set, int count, vlist_t list) {
           
       for (uintptr_t offset = 0; offset < mm->l3info.bufsize; offset += mm->l3groupsize * LX_CACHELINE) {
         void* cand = buf + offset;
-        clflush(cand);
-        if (checkevict(es, cand)) {
-          if (!CHECK_ALLOCATED_FLAG(cand, groupOffset * L3_CACHELINE)) {
-            SET_ALLOCATED_FLAG(cand, groupOffset * L3_CACHELINE);
-            vl_push(list, cand + groupOffset * L3_CACHELINE);
-            if(--count == 0)
-              return;
-        }
+        if (!CHECK_ALLOCATED_FLAG(cand, groupOffset * L3_CACHELINE)) {
+          clflush(cand);
+          if (checkevict(es, cand)) {
+              SET_ALLOCATED_FLAG(cand, groupOffset * L3_CACHELINE);
+              vl_push(list, cand + groupOffset * L3_CACHELINE);
+              if(--count == 0)
+                return;
+          }
       }
     } 
   }
@@ -266,6 +266,8 @@ static int ptemap(mm_t mm) {
 
 #define CHECKTIMES 16
 
+static volatile uint64_t c2m;
+
 static int timedwalk(void *list, register void *candidate) {
 #ifdef DEBUG
   static int debug = 100;
@@ -279,9 +281,12 @@ static int timedwalk(void *list, register void *candidate) {
     return 0;
   void *start = list;
   ts_t ts = ts_alloc();
-  void *c2 = (void *)((uintptr_t)candidate ^ 0x200);
+  
+  void *c2 = &c2m;
+  
   LNEXT(c2) = candidate;
   clflush(c2);
+  
   memaccess(candidate);
   for (int i = 0; i < CHECKTIMES * (debug ? 20 : 1); i++) {
     walk(list, 20);

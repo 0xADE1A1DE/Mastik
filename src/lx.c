@@ -192,10 +192,10 @@ int lx_getmonitoredset(lxpp_t lx, int *lines, int nlines) {
 
 static int return_linked_memory(lxpp_t lx, void* head) {
   void* p = head;
-  while(p != head) {
+  do {
     mm_returnline(lx->mm, head);
     head = *((void **) head);
-  }
+  } while (head != p);
 }
 
 int lx_unmonitor(lxpp_t lx, int line) {
