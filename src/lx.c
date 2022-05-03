@@ -231,23 +231,6 @@ void lx_unmonitorall(lxpp_t lx) {
     return_linked_memory(lx, lx->monitoredhead[i]);
   lx->nmonitored = 0;
 }
-
-void * lx_sethead(lxpp_t lx, int set) { //vlist_t list, int count, int offset) {
-  vlist_t list = lx->groups[set / lx->groupsize];
-  
-  int count = lx->lxinfo.associativity;
-  if (count == 0 || vl_len(list) < count)
-    count = vl_len(list);
-
-  int offset = (set % lx->groupsize) * LX_CACHELINE;
-
-  for (int i = 0; i < count; i++) {
-    LNEXT(OFFSET(vl_get(list, i), offset)) = OFFSET(vl_get(list, (i + 1) % count), offset);
-    LNEXT(OFFSET(vl_get(list, i), offset+sizeof(void*))) = OFFSET(vl_get(list, (i + count - 1) % count), offset+sizeof(void *));
-  }
-
-  return OFFSET(vl_get(list, 0), offset);
-}
                                        
 int lx_getlxinfo(lxpp_t lx, lxinfo_t lxinfo) {
   if (!lxinfo || !lx)
@@ -281,12 +264,13 @@ int lx_syncpp(lxpp_t lx, int nrecords, uint16_t *results, lx_sync_cb setup, lx_s
     exec(lx, i, data);
 
     lx_bprobe(lx, results);
-
   }
   return nrecords;
 }
 
 int lx_monitor(lxpp_t lx, int line) {
+  if (line < 0 || line >= lx->totalsets)
+    return 0;
   if (IS_MONITORED(lx->monitoredbitmap, line))
     return 0;
   

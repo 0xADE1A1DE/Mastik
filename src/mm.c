@@ -227,7 +227,6 @@ static void mm_l1l2findlines(mm_t mm, cachelevel_e cachelevel,
       {
         if (!CHECK_ALLOCATED_FLAG(buf, offset))
         {
-          // printf("Added, count = %d\n", count);
           SET_ALLOCATED_FLAG(buf, offset);
           vl_push(list, buf + offset);
           if (--count == 0)
@@ -301,7 +300,6 @@ static int ptemap(mm_t mm)
   {
     uintptr_t phys = getphysaddr(mm->l3buffer + i);
     int slice = addr2slice_linear(phys, mm->l3info.slices);
-    // mm->l3info.sets = sets per slice
     int cacheindex = ((phys / L3_CACHELINE) & (mm->l3info.sets - 1));
     vlist_t list = mm->l3groups[slice * (mm->l3info.sets / mm->l3groupsize) + cacheindex / mm->l3groupsize];
     vl_push(list, mm->l3buffer + i);
