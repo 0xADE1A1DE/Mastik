@@ -200,7 +200,7 @@ static int return_linked_memory(lxpp_t lx, void* head) {
 }
 
 int lx_unmonitor(lxpp_t lx, int line) {
-  if (line < 0 || line >= lx->nmonitored) 
+  if (line < 0 || line >= lx->totalsets) 
     return 0;
   if (!IS_MONITORED(lx->monitoredbitmap, line))
     return 0;
