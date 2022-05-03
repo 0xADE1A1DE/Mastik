@@ -157,7 +157,7 @@ static void mm_l3findlines(mm_t mm, int set, int count, vlist_t list) {
         if (checkevict(es, cand)) {
           if (!CHECK_ALLOCATED_FLAG(cand, groupOffset * L3_CACHELINE)) {
             SET_ALLOCATED_FLAG(cand, groupOffset * L3_CACHELINE);
-            vl_push(list, cand + groupOffset);
+            vl_push(list, cand + groupOffset * L3_CACHELINE);
             if(--count == 0)
               return;
         }
