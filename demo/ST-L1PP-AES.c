@@ -49,7 +49,7 @@ void tobinary(char *data, aes_t aes) {
 }
 
 void grayspace(int64_t intensity, int64_t min, int64_t max, char c) {
-  printf("\e[48;5;%ld;31;1m%c\e[0m", 232+((intensity - min) *24)/(max - min), c);
+  printf("\e[48;5;%ld;31;1m%c\e[0m", 232+((intensity - min) *24)/(max - min + 1), c);
 }
 
 int64_t display(int counts[256], int64_t data[256][1024], int guess, int offset) {

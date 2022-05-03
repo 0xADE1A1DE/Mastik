@@ -61,8 +61,6 @@ void lx_monitorall(lxpp_t lx);
 int lx_unmonitor(lxpp_t lx, int line);
 void lx_unmonitorall(lxpp_t lx);
 
-void * lx_sethead(lxpp_t lx, int set);
-
 int lx_getlxinfo(lxpp_t lx, lxinfo_t lxinfo);
 
 // Type of callback for setup and execute for synchronized PP or ET
