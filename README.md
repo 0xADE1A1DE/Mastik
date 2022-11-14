@@ -109,5 +109,10 @@ For example of usage look at the demo folder.
 
 ## Thanks
 
-Mastik is supported by a generous gift from Intel.
+Mastik is supported by:
+* An ARC Discovery Early Career Researcher Award (project number DE200101577)
+* An ARC Discovery Project (project number DP210102670)
+* The Blavatnik ICRC at Tel-Aviv University
+* Data61, CSIRO
+* a gift from Intel
 
