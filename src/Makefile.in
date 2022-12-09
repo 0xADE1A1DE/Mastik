@@ -10,6 +10,8 @@ LIBSRCS= \
 	lx.c \
 	mm.c \
 	pda.c \
+	ps.c \
+	pt.c \
 	util.c \
 	symbol.c \
 	synctrace.c \
